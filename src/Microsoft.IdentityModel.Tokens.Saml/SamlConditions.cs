@@ -25,14 +25,15 @@
 //
 //------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
-namespace System.IdentityModel.Tokens.Saml2
+namespace Microsoft.IdentityModel.Tokens.Saml
 {
     /// <summary>
-    /// Initializes a new instance of <see cref="Saml2Conditions"/>. 
+    /// Initializes a new instance of <see cref="SamlConditions"/>. 
     /// </summary>
-    public class Saml2Conditions
+    public class SamlConditions
     {
         /// <summary>
         /// Gets or sets the notbefore time.
@@ -51,8 +52,8 @@ namespace System.IdentityModel.Tokens.Saml2
         }
 
         /// <summary>
-        /// Gets or sets the list of Saml2AudienceRestriction.
+        /// Gets or sets the list of SamlCondition.
         /// </summary>
-        public IList<Saml2AudienceRestriction> AudienceRestrictions { get; set; }
+        public IList<SamlCondition> Conditions { get; set; }
     }
 }

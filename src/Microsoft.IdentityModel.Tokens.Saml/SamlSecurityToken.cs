@@ -26,16 +26,19 @@
 //------------------------------------------------------------------------------
 
 using Microsoft.IdentityModel.Tokens;
+using Token = Microsoft.IdentityModel.Tokens.SecurityToken;
+using Key = Microsoft.IdentityModel.Tokens.SecurityKey;
+using System;
 
-namespace System.IdentityModel.Tokens.Saml2
+namespace Microsoft.IdentityModel.Tokens.Saml
 {
     /// <summary>
-    /// Initializes a new instance of <see cref="Saml2SecurityToken"/>.
+    /// Initializes a new instance of <see cref="SamlSecurityToken"/>.
     /// </summary>
-    public class Saml2SecurityToken : SecurityToken
+    public class SamlSecurityToken : Token
     {
         /// <summary>
-        /// Gets the Id of this <see cref="Saml2SecurityToken"/>.
+        /// Gets the Id of this <see cref="SamlSecurityToken"/>.
         /// </summary>
         public override string Id
         {
@@ -48,7 +51,7 @@ namespace System.IdentityModel.Tokens.Saml2
         /// <summary>
         /// Gets the <see cref="SecurityKey"/>.
         /// </summary>
-        public override SecurityKey SecurityKey
+        public override Key SecurityKey
         {
             get
             {
@@ -57,7 +60,7 @@ namespace System.IdentityModel.Tokens.Saml2
         }
 
         /// <summary>
-        /// Get the time when this <see cref="Saml2SecurityToken"/> was valid.
+        /// Get the time when this <see cref="SamlSecurityToken"/> was valid.
         /// </summary>
         public override DateTime ValidFrom
         {
@@ -68,7 +71,7 @@ namespace System.IdentityModel.Tokens.Saml2
         }
 
         /// <summary>
-        /// Get the time when this <see cref="Saml2SecurityToken"/> is no longer valid.
+        /// Get the time when this <see cref="SamlSecurityToken"/> is no longer valid.
         /// </summary>
         public override DateTime ValidTo
         {
@@ -79,23 +82,29 @@ namespace System.IdentityModel.Tokens.Saml2
         }
 
         /// <summary>
-        /// Gets the <see cref="Saml2Conditions"/>.
-        /// </summary>
-        public Saml2Conditions Conditions { get; }
-
-        /// <summary>
         /// Gets or sets the <see cref="SecurityKey"/> that signed this instance.
         /// </summary>
         /// <remarks><see cref="ISecurityTokenValidator"/>.ValidateToken(...) updates this value when a <see cref="SecurityKey"/> is used to successfully validate a signature.</remarks>
-        public override SecurityKey SigningKey
+        public override Key SigningKey
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Gets the Issuer of this <see cref="Saml2SecurityToken"/>.
+        /// Gets or sets the <see cref="SamlConditions"/>.
         /// </summary>
-        public override string Issuer { get; }
+        public SamlConditions Conditions { get; set; }
+
+        /// <summary>
+        /// Gets the Issuer of this <see cref="SamlSecurityToken"/>.
+        /// </summary>
+        public override string Issuer
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

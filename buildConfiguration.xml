@@ -31,7 +31,7 @@
       <project name="System.IdentityModel.Tokens.Jwt">
         <build>yes</build>
       </project>
-      <project name="System.IdentityModel.Tokens.Saml">
+      <project name="Microsoft.IdentityModel.Tokens.Saml">
         <build>yes</build>
       </project>
       <project name="Microsoft.IdentityModel.Protocols">
@@ -54,7 +54,7 @@
       <project name="System.IdentityModel.Tokens.Jwt.Tests">
         <build>yes</build>
       </project>
-      <project name="System.IdentityModel.Tokens.Saml.Tests">
+      <project name="Microsoft.IdentityModel.Tokens.Saml.Tests">
         <build>yes</build>
       </project>
       <project name="Microsoft.IdentityModel.Protocols.Tests">

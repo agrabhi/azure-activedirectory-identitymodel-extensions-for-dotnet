@@ -25,20 +25,20 @@
 //
 //------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IdentityModel.Tokens.Saml;
 using System.IO;
 using System.Security.Claims;
 using System.Text;
 using System.Xml;
 using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Tokens.Saml;
 
-namespace System.IdentityModel.Tokens.Saml2
+namespace Microsoft.IdentityModel.Tokens.Saml2
 {
     /// <summary>
-    /// A derived <see cref="System.IdentityModel.Tokens.Saml2.Saml2SecurityTokenHandler"/> that implements ISecurityTokenValidator,
+    /// A derived <see cref="Microsoft.IdentityModel.Tokens.Saml2.Saml2SecurityTokenHandler"/> that implements ISecurityTokenValidator,
     /// which supports validating tokens passed as strings using <see cref="TokenValidationParameters"/>.
     /// </summary>
     ///
@@ -87,7 +87,7 @@ namespace System.IdentityModel.Tokens.Saml2
         }
 
         /// <summary>
-        /// Reads the string as XML and looks for the an element <see cref="SamlConstants.Assertion"/> or  <see cref="SamlConstants.EncryptedAssertion"/> with namespace <see cref="SamlConstants.Saml2Namespace"/>.
+        /// Reads the string as XML and looks for the an element <see cref="Saml.SamlConstants.Assertion"/> or  <see cref="SamlConstants.EncryptedAssertion"/> with namespace <see cref="SamlConstants.Saml2Namespace"/>.
         /// </summary>
         /// <param name="securityToken">The securitytoken.</param>
         /// <returns><see cref="XmlDictionaryReader.IsStartElement"/> (<see cref="SamlConstants.Assertion"/>, <see cref="SamlConstants.Saml2Namespace"/>)
@@ -119,23 +119,6 @@ namespace System.IdentityModel.Tokens.Saml2
         }
 
         /// <summary>
-        /// Creates the security token reference when the token is not attached to the message.
-        /// </summary>
-        /// <param name="token">The saml token.</param>
-        /// <param name="attached">Boolean that indicates if a attached or unattached
-        /// reference needs to be created.</param>
-        /// <returns>A <see cref="SecurityKeyIdentifierClause"/>.</returns>
-        public override SecurityKeyIdentifierClause CreateSecurityTokenReference(SecurityToken token, bool attached)
-        {
-            if (null == token)
-            {
-                throw new ArgumentNullException("token");
-            }
-
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
         /// Creates a <see cref="ClaimsIdentity"/> from the Saml2 token.
         /// </summary>
         /// <param name="samlToken">The Saml2SecurityToken.</param>
@@ -155,9 +138,7 @@ namespace System.IdentityModel.Tokens.Saml2
             }
 
             if (string.IsNullOrWhiteSpace(issuer))
-            {
-                throw new ArgumentException(LogMessages.IDX10221);
-            }
+                IdentityModelEventSource.Logger.WriteVerbose(Saml.LogMessages.IDX10244, ClaimsIdentity.DefaultIssuer);
 
             throw new NotImplementedException();
         }
@@ -182,7 +163,7 @@ namespace System.IdentityModel.Tokens.Saml2
         /// Gets and sets the maximum size in bytes, that a will be processed.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">'value' less than 1.</exception>
-        public Int32 MaximumTokenSizeInBytes
+        public int MaximumTokenSizeInBytes
         {
             get
             {
@@ -193,7 +174,7 @@ namespace System.IdentityModel.Tokens.Saml2
             {
                 if (value < 1)
                 {
-                    throw LogHelper.LogExceptionMessage(new ArgumentOutOfRangeException("value", String.Format(CultureInfo.InvariantCulture, LogMessages.IDX10101, value.ToString(CultureInfo.InvariantCulture))));
+                    throw LogHelper.LogExceptionMessage(new ArgumentOutOfRangeException("value", String.Format(CultureInfo.InvariantCulture, Saml.LogMessages.IDX10101, value.ToString(CultureInfo.InvariantCulture))));
                 }
 
                 _maximumTokenSizeInBytes = value;
@@ -207,7 +188,7 @@ namespace System.IdentityModel.Tokens.Saml2
         /// <exception cref="NotSupportedException">Use <see cref="ReadToken(XmlReader, TokenValidationParameters)"/> to read a <see cref="Saml2SecurityToken"/>.</exception>
         public override SecurityToken ReadToken(string tokenString)
         {
-            throw new NotSupportedException(LogMessages.IDX11006);
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -217,7 +198,7 @@ namespace System.IdentityModel.Tokens.Saml2
         /// <exception cref="NotSupportedException">Use <see cref="ReadToken(XmlReader, TokenValidationParameters)"/> to read a <see cref="Saml2SecurityToken"/>.</exception>
         public override SecurityToken ReadToken(XmlReader reader)
         {
-            throw new NotSupportedException(LogMessages.IDX11002);
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -260,7 +241,7 @@ namespace System.IdentityModel.Tokens.Saml2
 
             if (securityToken.Length > MaximumTokenSizeInBytes)
             {
-                throw LogHelper.LogExceptionMessage(new ArgumentException(String.Format(CultureInfo.InvariantCulture, LogMessages.IDX10209, securityToken.Length, MaximumTokenSizeInBytes)));
+                throw LogHelper.LogExceptionMessage(new ArgumentException(String.Format(CultureInfo.InvariantCulture, Saml.LogMessages.IDX10209, securityToken.Length, MaximumTokenSizeInBytes)));
             }
 
             Saml2SecurityToken samlToken;
@@ -274,7 +255,7 @@ namespace System.IdentityModel.Tokens.Saml2
 
             if (samlToken.SigningKey == null && validationParameters.RequireSignedTokens)
             {
-                throw new SecurityTokenValidationException(LogMessages.IDX10213);
+                throw new SecurityTokenValidationException(Saml.LogMessages.IDX10213);
             }
 
             DateTime? notBefore = null;
@@ -291,15 +272,15 @@ namespace System.IdentityModel.Tokens.Saml2
             {
                 if (validationParameters.LifetimeValidator != null)
                 {
-                    if (!validationParameters.LifetimeValidator(notBefore: notBefore, expires: expires, securityToken: samlToken, validationParameters: validationParameters))
+                    if (!validationParameters.LifetimeValidator(notBefore, expires, samlToken, validationParameters))
                     {
-                        throw LogHelper.LogExceptionMessage(new SecurityTokenInvalidLifetimeException(String.Format(CultureInfo.InvariantCulture, LogMessages.IDX10230, securityToken))
+                        throw LogHelper.LogExceptionMessage(new SecurityTokenInvalidLifetimeException(string.Format(CultureInfo.InvariantCulture, Saml.LogMessages.IDX10230, securityToken))
                         { NotBefore = notBefore, Expires = expires });
                     }
                 }
                 else
                 {
-                    ValidateLifetime(notBefore: notBefore, expires: expires, securityToken: samlToken, validationParameters: validationParameters);
+                    ValidateLifetime(notBefore, expires, samlToken, validationParameters);
                 }
             }
 
@@ -332,7 +313,7 @@ namespace System.IdentityModel.Tokens.Saml2
                 {
                     if (!validationParameters.AudienceValidator(audiences, samlToken, validationParameters))
                     {
-                        throw LogHelper.LogExceptionMessage(new SecurityTokenInvalidAudienceException(String.Format(CultureInfo.InvariantCulture, LogMessages.IDX10231, securityToken))
+                        throw LogHelper.LogExceptionMessage(new SecurityTokenInvalidAudienceException(String.Format(CultureInfo.InvariantCulture, Saml.LogMessages.IDX10231, securityToken))
                             { InvalidAudience = String.Join(", ", audiences) });
                     }
                 }
@@ -430,7 +411,7 @@ namespace System.IdentityModel.Tokens.Saml2
 
             Saml2SecurityToken samlSecurityToken = token as Saml2SecurityToken;
             if (samlSecurityToken == null)
-                throw LogHelper.LogExceptionMessage(new ArgumentException(String.Format(CultureInfo.InvariantCulture, LogMessages.IDX10400, this.GetType(), typeof(Saml2SecurityToken), token.GetType())));
+                throw LogHelper.LogExceptionMessage(new ArgumentException(String.Format(CultureInfo.InvariantCulture, Saml.LogMessages.IDX10400, this.GetType(), typeof(Saml2SecurityToken), token.GetType())));
 
             StringBuilder stringBuilder = new StringBuilder();
             using (XmlWriter xmlWriter = XmlWriter.Create(stringBuilder))
@@ -454,7 +435,7 @@ namespace System.IdentityModel.Tokens.Saml2
 
             Saml2SecurityToken samlSecurityToken = token as Saml2SecurityToken;
             if (samlSecurityToken == null)
-                throw LogHelper.LogExceptionMessage(new ArgumentException(String.Format(CultureInfo.InvariantCulture, LogMessages.IDX10400, GetType(), typeof(SamlSecurityToken), token.GetType())));
+                throw LogHelper.LogExceptionMessage(new ArgumentException(String.Format(CultureInfo.InvariantCulture, Saml.LogMessages.IDX10400, GetType(), typeof(Saml2SecurityToken), token.GetType())));
 
             throw new NotSupportedException();
         }

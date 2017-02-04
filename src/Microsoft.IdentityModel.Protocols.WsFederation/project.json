@@ -1,15 +1,19 @@
 {
   "version": "2.1.3",
   "description": "Includes types that provide support for WsFederation protocol.",
-  "dependencies": {
-    "Microsoft.IdentityModel.Protocols": "2.1.3"
-  },
-  "frameworks": {
-    "netstandard1.4": {},
-    "net451": { }
-  },
+    "dependencies": {
+        "Microsoft.IdentityModel.Tokens": "5.1.3",
+        "Microsoft.IdentityModel.Protocols": "2.1.3"
+    },
+    "frameworks": {
+        "net451": {
+            "frameworkAssemblies": {
+                "System.Web": "",
+                "System.IdentityModel": ""
+            }
+        }
+    },
   "buildOptions": {
-    "compile": { "exclude": [ "WsFederationMessage.cs", "Configuration\\WsFederationConfiguration.cs", "Configuration\\WsFederationConfigurationRetriever.cs"] },
     "delaySign": true,
     "keyFile": "../../build/35MSSharedLib1024.snk",
     "warningsAsErrors": true,

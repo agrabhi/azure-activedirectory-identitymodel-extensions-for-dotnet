@@ -27,7 +27,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IdentityModel.Protocols.WSTrust;
 using System.IO;
+using System.Web;
 using System.Xml;
 using Microsoft.IdentityModel.Logging;
 
@@ -52,7 +55,7 @@ namespace Microsoft.IdentityModel.Protocols.WsFederation
             if (!string.IsNullOrWhiteSpace(queryString))
             {
                 // TODO replace HttpUtility
-                //wsFederationMessage.SetParameters(HttpUtility.ParseQueryString(query: queryString));
+                wsFederationMessage.SetParameters(HttpUtility.ParseQueryString(query: queryString));
             } 
 
             return wsFederationMessage;
@@ -69,7 +72,7 @@ namespace Microsoft.IdentityModel.Protocols.WsFederation
             IdentityModelEventSource.Logger.WriteVerbose(string.Format(CultureInfo.InvariantCulture, LogMessages.IDX10901, uri.ToString()));
             if (uri != null && uri.Query.Length > 1)
             {
-                return WsFederationMessage.FromQueryString(uri.Query.Substring(1));
+                return FromQueryString(uri.Query.Substring(1));
             }
 
             return new WsFederationMessage();
@@ -78,13 +81,21 @@ namespace Microsoft.IdentityModel.Protocols.WsFederation
         /// <summary>
         /// Initializes a new instance of the <see cref="WsFederationMessage"/> class.
         /// </summary>
-        public WsFederationMessage() : this(string.Empty) {}
+        public WsFederationMessage()
+        {
+        }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="WsFederationMessage"/> class.
         /// </summary>
         /// <param name="issuerAddress">The endpoint of the token issuer.</param>
-        public WsFederationMessage(string issuerAddress) : base(issuerAddress) {}
+        public WsFederationMessage(string issuerAddress)
+        {
+            if (string.IsNullOrEmpty(issuerAddress))
+                throw LogHelper.LogArgumentNullException(nameof(issuerAddress));
+
+            IssuerAddress = issuerAddress;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WsFederationMessage"/> class.

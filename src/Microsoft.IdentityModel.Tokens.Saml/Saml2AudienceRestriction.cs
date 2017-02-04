@@ -25,9 +25,10 @@
 //
 //------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
-namespace System.IdentityModel.Tokens.Saml2
+namespace Microsoft.IdentityModel.Tokens.Saml2
 {
     /// <summary>
     /// Initializes a new instance of <see cref="Saml2AudienceRestriction"/>. 

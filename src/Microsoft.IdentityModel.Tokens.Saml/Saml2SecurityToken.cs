@@ -25,17 +25,18 @@
 //
 //------------------------------------------------------------------------------
 
+using System;
 using Microsoft.IdentityModel.Tokens;
 
-namespace System.IdentityModel.Tokens.Saml
+namespace Microsoft.IdentityModel.Tokens.Saml2
 {
     /// <summary>
-    /// Initializes a new instance of <see cref="SamlSecurityToken"/>.
+    /// Initializes a new instance of <see cref="Saml2SecurityToken"/>.
     /// </summary>
-    public class SamlSecurityToken : SecurityToken
+    public class Saml2SecurityToken : SecurityToken
     {
         /// <summary>
-        /// Gets the Id of this <see cref="SamlSecurityToken"/>.
+        /// Gets the Id of this <see cref="Saml2SecurityToken"/>.
         /// </summary>
         public override string Id
         {
@@ -57,7 +58,7 @@ namespace System.IdentityModel.Tokens.Saml
         }
 
         /// <summary>
-        /// Get the time when this <see cref="SamlSecurityToken"/> was valid.
+        /// Get the time when this <see cref="Saml2SecurityToken"/> was valid.
         /// </summary>
         public override DateTime ValidFrom
         {
@@ -68,15 +69,17 @@ namespace System.IdentityModel.Tokens.Saml
         }
 
         /// <summary>
-        /// Get the time when this <see cref="SamlSecurityToken"/> is no longer valid.
+        /// Get the time when this <see cref="Saml2SecurityToken"/> is no longer valid.
         /// </summary>
         public override DateTime ValidTo
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
+
+        /// <summary>
+        /// Gets the <see cref="Saml2Conditions"/>.
+        /// </summary>
+        public Saml2Conditions Conditions { get; }
 
         /// <summary>
         /// Gets or sets the <see cref="SecurityKey"/> that signed this instance.
@@ -89,19 +92,8 @@ namespace System.IdentityModel.Tokens.Saml
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="SamlConditions"/>.
+        /// Gets the Issuer of this <see cref="Saml2SecurityToken"/>.
         /// </summary>
-        public SamlConditions Conditions { get; set; }
-
-        /// <summary>
-        /// Gets the Issuer of this <see cref="SamlSecurityToken"/>.
-        /// </summary>
-        public override string Issuer
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public override string Issuer { get; }
     }
 }

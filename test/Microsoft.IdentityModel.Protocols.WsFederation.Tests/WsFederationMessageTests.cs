@@ -26,7 +26,9 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
+using Microsoft.IdentityModel.Tokens.Tests;
 using Xunit;
 
 namespace Microsoft.IdentityModel.Protocols.WsFederation.Tests
@@ -40,12 +42,12 @@ namespace Microsoft.IdentityModel.Protocols.WsFederation.Tests
         public void Constructors()
         {
             WsFederationMessage wsFederationMessage = new WsFederationMessage();
-            Assert.AreEqual(wsFederationMessage.IssuerAddress, string.Empty);
+            Assert.Equal(wsFederationMessage.IssuerAddress, string.Empty);
 
-            wsFederationMessage = new WsFederationMessage("http://www.got.jwt.com");
-            Assert.AreEqual(wsFederationMessage.IssuerAddress, "http://www.got.jwt.com");
+            wsFederationMessage = new WsFederationMessage { IssuerAddress = "http://www.got.jwt.com" };
+            Assert.Equal(wsFederationMessage.IssuerAddress, "http://www.got.jwt.com");
 
-            ExpectedException expectedException = ExpectedException.ArgumentNullException("issuerAddress");
+            var expectedException = ExpectedException.ArgumentNullException("IDX10000:");
             try
             {
                 wsFederationMessage = new WsFederationMessage((string)null);
@@ -62,37 +64,38 @@ namespace Microsoft.IdentityModel.Protocols.WsFederation.Tests
         {
             WsFederationMessage wsFederationMessage = new WsFederationMessage();
 
-            Assert.AreEqual(wsFederationMessage.IssuerAddress, string.Empty);
-            Assert.IsNull(wsFederationMessage.Wa);
-            Assert.IsNull(wsFederationMessage.Wauth);
-            Assert.IsNull(wsFederationMessage.Wct);
-            Assert.IsNull(wsFederationMessage.Wctx);
-            Assert.IsNull(wsFederationMessage.Wencoding);
-            Assert.IsNull(wsFederationMessage.Wfed);
-            Assert.IsNull(wsFederationMessage.Wfresh);
-            Assert.IsNull(wsFederationMessage.Whr);
-            Assert.IsNull(wsFederationMessage.Wp);
-            Assert.IsNull(wsFederationMessage.Wpseudo);
-            Assert.IsNull(wsFederationMessage.Wpseudoptr);
-            Assert.IsNull(wsFederationMessage.Wreply);
-            Assert.IsNull(wsFederationMessage.Wreq);
-            Assert.IsNull(wsFederationMessage.Wreqptr);
-            Assert.IsNull(wsFederationMessage.Wres);
-            Assert.IsNull(wsFederationMessage.Wresult);
-            Assert.IsNull(wsFederationMessage.Wresultptr);
-            Assert.IsNull(wsFederationMessage.Wtrealm);
+            Assert.Equal(wsFederationMessage.IssuerAddress, string.Empty);
+            Assert.Null(wsFederationMessage.Wa);
+            Assert.Null(wsFederationMessage.Wauth);
+            Assert.Null(wsFederationMessage.Wct);
+            Assert.Null(wsFederationMessage.Wctx);
+            Assert.Null(wsFederationMessage.Wencoding);
+            Assert.Null(wsFederationMessage.Wfed);
+            Assert.Null(wsFederationMessage.Wfresh);
+            Assert.Null(wsFederationMessage.Whr);
+            Assert.Null(wsFederationMessage.Wp);
+            Assert.Null(wsFederationMessage.Wpseudo);
+            Assert.Null(wsFederationMessage.Wpseudoptr);
+            Assert.Null(wsFederationMessage.Wreply);
+            Assert.Null(wsFederationMessage.Wreq);
+            Assert.Null(wsFederationMessage.Wreqptr);
+            Assert.Null(wsFederationMessage.Wres);
+            Assert.Null(wsFederationMessage.Wresult);
+            Assert.Null(wsFederationMessage.Wresultptr);
+            Assert.Null(wsFederationMessage.Wtrealm);
         }
 
         [Fact(DisplayName = "WsFederationMessageTests: GetSets")]
         public void GetSets()
         {
+            var errors = new List<string>();
             WsFederationMessage wsFederationMessage = new WsFederationMessage();
 
             Type type = typeof(WsFederationParameterNames);
             FieldInfo[] fields = type.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Static);
             foreach( FieldInfo fieldInfo in fields)
             {
-                TestUtilities.GetSet(wsFederationMessage, fieldInfo.Name, null, new object[]{ fieldInfo.Name, null, fieldInfo.Name + fieldInfo.Name } );
+                TestUtilities.GetSet(wsFederationMessage, fieldInfo.Name, null, new object[]{ fieldInfo.Name, null, fieldInfo.Name + fieldInfo.Name }, errors );
             }
         }
 
@@ -117,12 +120,16 @@ namespace Microsoft.IdentityModel.Protocols.WsFederation.Tests
             WsFederationMessage wsFederationMessageReturned = WsFederationMessage.FromQueryString(uri.Query);
             wsFederationMessageReturned.IssuerAddress = issuerAdderss;
             wsFederationMessageReturned.Parameters.Add("bob", null);
-            Assert.IsTrue(MessageComparer.AreEqual(wsFederationMessage, wsFederationMessageReturned));
+            Assert.Equal(wsFederationMessageReturned.IssuerAddress, issuerAdderss );
+            Assert.Equal(wsFederationMessageReturned.Wreply, wreply);
+            Assert.Equal(wsFederationMessageReturned.Wct, wct);
 
             wsFederationMessageReturned = WsFederationMessage.FromUri(uri);
             wsFederationMessageReturned.IssuerAddress = issuerAdderss;
             wsFederationMessageReturned.Parameters.Add("bob", null);
-            Assert.IsTrue(MessageComparer.AreEqual(wsFederationMessage, wsFederationMessageReturned));
+            Assert.Equal(wsFederationMessageReturned.IssuerAddress, issuerAdderss);
+            Assert.Equal(wsFederationMessageReturned.Wreply, wreply);
+            Assert.Equal(wsFederationMessageReturned.Wct, wct);
         }
     }
 }

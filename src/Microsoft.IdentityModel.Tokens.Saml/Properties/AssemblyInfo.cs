@@ -29,12 +29,12 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("System.IdentityModel.Tokens.Saml")]
+[assembly: AssemblyTitle("Microsoft.IdentityModel.Tokens.Saml")]
 [assembly: AssemblyDescription("Support for Saml1 and Saml2 SecurityTokens.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCopyright("Copyright (c) Microsoft Corporation. All rights reserved.")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyProduct("System.IdentityModel.Tokens.Saml")]
+[assembly: AssemblyProduct("Microsoft.IdentityModel.Tokens.Saml")]
 [assembly: AssemblyTrademark("")]
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]

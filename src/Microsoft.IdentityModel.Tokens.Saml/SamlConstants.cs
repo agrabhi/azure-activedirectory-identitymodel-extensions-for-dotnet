@@ -25,16 +25,21 @@
 //
 //------------------------------------------------------------------------------
 
-namespace Microsoft.IdentityModel.Protocols.WsFederation
+namespace Microsoft.IdentityModel.Tokens.Saml
 {
     /// <summary>
-    /// This class serializes the xml metadata that we get from discovery endpoint.
+    /// Constants related to SAML Tokens.
     /// </summary>
-    public class MetadataSerializer
+    public static class SamlConstants
     {
-        /// <summary>
-        /// Gets or sets the <see cref="X509CertificateValidationMode"/>.
-        /// </summary>
-        public X509CertificateValidationMode CertificateValidationMode { get; set; }
+        #pragma warning disable 1591
+        public const string Assertion = "Assertion";
+        public const string EncryptedAssertion = "EncryptedAssertion";
+        public const int MajorVersionValue = 1;
+        public const int MinorVersionValue = 1;
+        public const string Prefix = "saml";
+        public const string Saml11Namespace = "urn:oasis:names:tc:SAML:1.0:assertion";
+        public const string Saml2Namespace = "urn:oasis:names:tc:SAML:2.0:assertion";
+        #pragma warning restore 1591
     }
 }

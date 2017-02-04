@@ -27,8 +27,10 @@
 
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.IdentityModel.Tokens.Saml;
-using System.IdentityModel.Tokens.Saml2;
+#if NET451
+using Microsoft.IdentityModel.Tokens.Saml;
+using Microsoft.IdentityModel.Tokens.Saml2;
+#endif
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -90,10 +92,10 @@ namespace Microsoft.IdentityModel.Tokens.Tests
             return new JwtSecurityToken(header, payload, header.Base64UrlEncode(), payload.Base64UrlEncode(), "" );
         }
 
+#if NET451
         public static string CreateSaml2Token()
         {
-            throw new NotImplementedException();
-            //return CreateSaml2Token(DefaultAsymmetricSecurityTokenDescriptor);
+            return CreateSaml2Token(IdentityUtilities.DefaultAsymmetricSecurityTokenDescriptor(ClaimSets.DefaultClaims));
         }
 
         public static string CreateSaml2Token(SecurityTokenDescriptor securityTokenDescriptor)
@@ -108,8 +110,7 @@ namespace Microsoft.IdentityModel.Tokens.Tests
 
         public static SamlSecurityToken CreateSamlSecurityToken()
         {
-            throw new NotImplementedException();
-            //return CreateSamlSecurityToken(DefaultAsymmetricSecurityTokenDescriptor, new Saml2SecurityTokenHandler());
+            return CreateSamlSecurityToken(IdentityUtilities.DefaultAsymmetricSecurityTokenDescriptor(ClaimSets.DefaultClaims), new Saml2SecurityTokenHandler());
         }
 
         public static SamlSecurityToken CreateSamlSecurityToken(SecurityTokenDescriptor securityTokenDescriptor, SecurityTokenHandler tokenHandler)
@@ -117,15 +118,9 @@ namespace Microsoft.IdentityModel.Tokens.Tests
             return CreateSecurityToken(securityTokenDescriptor, tokenHandler) as SamlSecurityToken;
         }
 
-        public static SecurityToken CreateSecurityToken(SecurityTokenDescriptor securityTokenDescriptor, SecurityTokenHandler tokenHandler)
-        {
-            return tokenHandler.CreateToken(securityTokenDescriptor);
-        }
-
         public static string CreateSamlToken()
         {
-            throw new NotImplementedException();
-            //return CreateSamlToken(DefaultAsymmetricSecurityTokenDescriptor);
+            return CreateSamlToken(IdentityUtilities.DefaultAsymmetricSecurityTokenDescriptor(ClaimSets.DefaultClaims));
         }
 
         public static string CreateSamlToken(SecurityTokenDescriptor securityTokenDescriptor)
@@ -136,6 +131,13 @@ namespace Microsoft.IdentityModel.Tokens.Tests
         public static string CreateSamlToken(SecurityTokenDescriptor securityTokenDescriptor, SecurityTokenHandler tokenHandler)
         {
             return CreateToken(securityTokenDescriptor, tokenHandler);
+        }
+
+#endif
+
+        public static SecurityToken CreateSecurityToken(SecurityTokenDescriptor securityTokenDescriptor, SecurityTokenHandler tokenHandler)
+        {
+            return tokenHandler.CreateToken(securityTokenDescriptor);
         }
 
         public static string CreateToken(SecurityTokenDescriptor securityTokenDescriptor, SecurityTokenHandler tokenHandler)

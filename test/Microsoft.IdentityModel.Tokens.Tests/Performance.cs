@@ -27,8 +27,10 @@
 
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.IdentityModel.Tokens.Saml;
-using System.IdentityModel.Tokens.Saml2;
+#if NET451
+using Microsoft.IdentityModel.Tokens.Saml;
+using Microsoft.IdentityModel.Tokens.Saml2;
+#endif
 using System.IO;
 using System.Xml;
 using Xunit;
@@ -219,6 +221,7 @@ namespace Microsoft.IdentityModel.Tokens.Tests
                 Console.WriteLine( string.Format( created, "JwtHandler - signatureProvider == null", iterations, DateTime.UtcNow - started ) );
             }
 
+#if NET451
             started = DateTime.UtcNow;
             for ( int i = 0; i < iterations; i++ )
             {
@@ -240,7 +243,7 @@ namespace Microsoft.IdentityModel.Tokens.Tests
             {
                 Console.WriteLine( string.Format( written, "Saml1", iterations, DateTime.UtcNow - started ) );
             }
-
+#endif
             started = DateTime.UtcNow;
             for ( int i = 0; i < iterations; i++ )
             {
@@ -253,7 +256,7 @@ namespace Microsoft.IdentityModel.Tokens.Tests
             }
 
         }
-
+#if NET451
         private void CreateSaml2Tokens( SecurityTokenDescriptor tokenDescriptor )
         {
             Saml2SecurityTokenHandler samlTokenHandler = new Saml2SecurityTokenHandler();
@@ -271,5 +274,6 @@ namespace Microsoft.IdentityModel.Tokens.Tests
             XmlDictionaryWriter writer = XmlDictionaryWriter.CreateTextWriter( ms );
             samlTokenHandler.WriteToken( writer, token );
         }
+#endif
     }
 }

@@ -25,15 +25,19 @@
 //
 //------------------------------------------------------------------------------
 
-using System;
+using System.Globalization;
+using System.IdentityModel.Metadata;
 using System.IdentityModel.Tokens;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
+using System.ServiceModel.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Microsoft.IdentityModel.Protocols.WsFederation
 {
@@ -82,18 +86,14 @@ namespace Microsoft.IdentityModel.Protocols.WsFederation
         public static async Task<WsFederationConfiguration> GetAsync(string address, IDocumentRetriever retriever, CancellationToken cancel)
         {
             if (string.IsNullOrWhiteSpace(address))
-            {
-                LogHelper.Throw(string.Format(CultureInfo.InvariantCulture, LogMessages.IDX10000, GetType() + ": address"), typeof(ArgumentNullException), EventLevel.Verbose);
-            }
+                throw LogHelper.LogArgumentNullException(string.Format(CultureInfo.InvariantCulture, LogMessages.IDX10000, nameof(address)));
 
             if (retriever == null)
-            {
-                LogHelper.Throw(string.Format(CultureInfo.InvariantCulture, LogMessages.IDX10000, GetType() + ": retriever"), typeof(ArgumentNullException), EventLevel.Verbose);
-            }
+                throw LogHelper.LogArgumentNullException(string.Format(CultureInfo.InvariantCulture, LogMessages.IDX10000, nameof(retriever)));
 
-            WsFederationConfiguration configuration = new WsFederationConfiguration();
 
-            string document = await retriever.GetDocumentAsync(address, cancel);
+            var configuration = new WsFederationConfiguration();
+            var document = await retriever.GetDocumentAsync(address, cancel);
 
             using (XmlReader metaDataReader = XmlReader.Create(new StringReader(document), SafeSettings))
             {
@@ -115,8 +115,8 @@ namespace Microsoft.IdentityModel.Protocols.WsFederation
                     {
                         if (keyDescriptor.KeyInfo != null && (keyDescriptor.Use == KeyType.Signing || keyDescriptor.Use == KeyType.Unspecified))
                         {
-                            IdentityModelEventSource.Logger.WriteVerbose(LogMessages.IDX10807);
-                            foreach (SecurityKeyIdentifierClause clause in keyDescriptor.KeyInfo)
+                            IdentityModelEventSource.Logger.WriteVerbose(LogMessages.IDX10901);
+                            foreach (System.IdentityModel.Tokens.SecurityKeyIdentifierClause clause in keyDescriptor.KeyInfo)
                             {
                                 X509RawDataKeyIdentifierClause x509Clause = clause as X509RawDataKeyIdentifierClause;
                                 if (x509Clause != null)
